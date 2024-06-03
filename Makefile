@@ -10,11 +10,17 @@ Ignore = target.mk
 vim_session:
 	bash -cl "vmt"
 
+data.Rout: data.R
+	$(pipeR)
+
+plot.Rout: plot.R data.rds
+	$(pipeR)
+
 ######################################################################
 
 ### Makestuff
 
-Sources += Makefile README.md
+Sources += Makefile README.md $(wildcard *.R)
 
 Ignore += makestuff
 msrepo = https://github.com/dushoff
