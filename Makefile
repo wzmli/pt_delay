@@ -10,11 +10,15 @@ Ignore = target.mk
 vim_session:
 	bash -cl "vmt"
 
-data.Rout: data.R
+data.Rout: data.R pts.tsv
+	$(pipeR)
+
+tsplot.Rout: tsplot.R data.rds
 	$(pipeR)
 
 plot.Rout: plot.R data.rds
 	$(pipeR)
+
 
 ######################################################################
 
