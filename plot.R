@@ -2,8 +2,8 @@ library(tidyverse);theme_set(theme_bw())
 library(zoo)
 library(shellpipes)
 
-date_start <- as.Date("2021-11-01") 
-date_end <- as.Date("2022-02-01") 
+date_start <- as.Date("2021-11-20") 
+date_end <- as.Date("2022-01-20") 
 
 pp1 <- c("BC", "AB","SK","MB","ON","QC", "NS","NB","PEI", "NL","YT","NT","NU")
 pp2 <- c("BC", "AB","SK","MB","ON","QC", "NS","NB","PEI", "NL","YT","NT","NU")
@@ -54,13 +54,34 @@ gg <- (ggplot(fulldat,aes(x=date))
 )
 
 print(gg)
-ggsave("pairsts.png",width=10)
+ggsave("pairsts.png",width=8)
+
 
 gg2 <- (ggplot(fulldat,aes(x=date))
 	+ geom_line(aes(y=prop1,color=pt1))
+	+ scale_x_date(date_labels="%b-%y")
 	+ coord_cartesian(xlim=c(date_start,date_end))
 )
 
 print(gg2)
 
+centraldat <- (fulldat
+	%>% filter(pt1 %in% c("BC","AB","SK","MB","ON","QC"))
+	%>% filter(pt2 %in% c("BC","AB","SK","MB","ON","QC"))
+)
 
+gg3 <- (ggplot(centraldat,aes(x=date))
+	+ facet_grid(pt1~pt2, scale="free")
+	+ geom_line(aes(y=prop2),color="red")
+	+ geom_line(aes(y=prop1),color="black")
+	+ coord_cartesian(xlim=c(date_start,date_end))
+	+ theme(strip.text.x=element_text(color="red")
+		, axis.ticks.y = element_blank()
+		, axis.text.y = element_blank()
+		, axis.title.y = element_blank()
+	)
+	+ scale_x_date(date_labels="%b-%y",date_breaks="1 month")
+)
+
+print(gg3)
+ggsave("pairsts_simple.png",width=8,height=4)
