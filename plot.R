@@ -31,7 +31,7 @@ fulldat <- (expand.grid(pt1=pp1,pt2=pp2,date=as.Date(datevec))
 		, pt1 = factor(pt1,levels=pp1)
 		, pt2 = factor(pt2,levels=pp1)
 	)
-	%>% filter(as.numeric(pt1)<=as.numeric(pt2))
+#	%>% filter(as.numeric(pt1)<=as.numeric(pt2))
 #	%>% filter(pt1 %in% c("BC","AB","SK"))
 )
 
@@ -85,3 +85,26 @@ gg3 <- (ggplot(centraldat,aes(x=date))
 
 print(gg3)
 ggsave("pairsts_simple.png",width=8,height=4)
+
+nldat <- (fulldat
+	%>% filter(pt1 == "NL")
+	%>% mutate(date2 = date + 4)
+)
+
+ggnl <- (ggplot(nldat)
+	+ facet_wrap(~pt2, scale="free")
+	+ geom_line(aes(x=date,y=prop2),color="black")
+	+ geom_line(aes(x=date2,y=prop1),color="red")
+	+ coord_cartesian(xlim=c(date_start,date_end))
+	+ theme(strip.text.x = element_text(colour = 'black')
+   	, axis.title.x=element_blank()
+      , axis.text.x=element_blank()
+      , axis.ticks.x=element_blank()
+      , axis.title.y=element_blank()
+      , axis.text.y=element_blank()
+      , axis.ticks.y=element_blank()
+   )
+)
+
+print(ggnl)
+
